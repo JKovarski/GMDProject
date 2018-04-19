@@ -1,8 +1,13 @@
 import networkx
 import obonet
 import re
+import os.path
 
-path = 'C:/Users/Julien/Desktop/GMD/hp.obo'
+
+
+
+my_path = os.path.abspath(os.getcwd())
+path = my_path + '\sources\hp.obo'
 graph = obonet.read_obo(path)
 
 
@@ -35,27 +40,32 @@ for elt in t: #on parcourt la liste des id
         l2.append([parsedXref, name[elt]])
         l.append([elt, name[elt]])
 
+class hpOboClass :
 
-def getIDFromSymptom(symptom) :
-    listHP = []
-    for i in range(len(l)) :
-        for j in range (len(l[i][1])) :
-            if re.findall(symptom, l[i][1][j],flags=re.IGNORECASE) :
-                if l[i][0] not in listHP :
-                    listHP.append(l[i][0])
-    return listHP
+    def __init__(self,ID = l, xref = l2):
+        self.ID = ID
+        self.xref = xref
+
+    def getIDFromSymptom(self,symptom) :
+        listHP = []
+        for i in range(len(l)) :
+            for j in range (len(l[i][1])) :
+                if re.findall(symptom, l[i][1][j],flags=re.IGNORECASE) :
+                    #print(l[i][1][j])
+                    if l[i][0] not in listHP :
+                        listHP.append(l[i][0])
+        return listHP
 #Exemple :
 #getIDFromSymptom("Malformation of the mandible")
 #getIDFromSymptom("cancer")
 
-def getUMLSFromSymptom(symptom) :
-    listUMLS = []
-    for i in range(len(l2)):
-        for j in range(len(l2[i][1])):
-            if re.findall(symptom, l2[i][1][j], flags=re.IGNORECASE):
-                for UMLS in l2[i][0]:
-                    if UMLS not in listUMLS :
-                        listUMLS.append(UMLS)
-                #listUMLS.append(l2[i][0])
-    return listUMLS
+    def getUMLSFromSymptom(self,symptom) :
+        listUMLS = []
+        for i in range(len(l2)):
+            for j in range(len(l2[i][1])):
+                if re.findall(symptom, l2[i][1][j], flags=re.IGNORECASE):
+                    for UMLS in l2[i][0]:
+                        if UMLS not in listUMLS :
+                            listUMLS.append(UMLS)
+        return listUMLS
 #getUMLSFromSymptom("cancer")
