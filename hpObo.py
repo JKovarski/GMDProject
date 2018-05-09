@@ -55,9 +55,7 @@ class hpOboClass :
                     if l[i][0] not in listHP :
                         listHP.append(l[i][0])
         return listHP
-#Exemple :
-#getIDFromSymptom("Malformation of the mandible")
-#getIDFromSymptom("cancer")
+
 
     def getUMLSFromSymptom(self,symptom) :
         listUMLS = []
@@ -68,4 +66,9 @@ class hpOboClass :
                         if UMLS not in listUMLS :
                             listUMLS.append(UMLS)
         return listUMLS
-#getUMLSFromSymptom("cancer")
+
+#Exemple :
+# test = hpOboClass()
+# test.getIDFromSymptom("Malformation of the mandible")
+# test.getIDFromSymptom("cancer")
+# print(test.getUMLSFromSymptom("cancer"))

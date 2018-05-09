@@ -22,7 +22,6 @@ for id in id2 :
     t=(id,)
     c.execute('SELECT disease_db_and_id FROM phenotype_annotation WHERE sign_id=?', t)
     out = c.fetchall()
-    print(out)
 c.close()
 
 def getONIM_ORPHAId(symptom):
