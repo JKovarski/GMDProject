@@ -1,52 +1,18 @@
 import couchdb
-import elasticsearch
+from elasticsearch import Elasticsearch
 import time
-##ATTENTION BIEN SE CONNECTER AU VPN
 
+#ATTENTION BIEN METTRE LE VPN
+
+es = Elasticsearch()
 SERVER = 'http://couchdb.telecomnancy.univ-lorraine.fr'
 DB_NAME = 'orphadatabase'
 couchserver = couchdb.Server(SERVER)
 mydb = couchserver[DB_NAME]
 
-# orphadataDict = {}
-# syndromes = list()
-#
-# def parseOrphadata():
-#     for elmt in mydb.view("clinicalsigns/GetDiseaseByClinicalSign") :
-#             value = elmt.value
-#             print(value)
-#             clinicalSign = value["clinicalSign"]
-#             clinicalSignName = clinicalSign["Name"]["text"]
-#             disease = value["disease"]
-#             diseaseName = disease["Name"]["text"]
-#             if clinicalSignName in orphadataDict :
-#                 orphadataDict[clinicalSignName].append(diseaseName)
-#             else :
-#                 orphadataDict[clinicalSignName] = [diseaseName]
-#                 syndromes.append(clinicalSignName)
-#     # il y a 49905 éléments
-#
-# def searchDiseaseOrphadata(self,syndrome) :
-#     if(syndrome in orphadataDict):
-#         return orphadataDict[syndrome]
-#     else :
-#         return []
-
-#
-# def getDiseaseNameFromORPHAID(orphaID):
-#     for elt in mydb.view("clinicalsigns/GetDiseaseByClinicalSign") :
-#         value = elt.value
-#         disease=value["disease"]
-#         orphaid = disease["OrphaNumber"]
-#         if str(orphaid) == orphaID.split(":")[1]:
-#             orphadisease = disease["Name"]["text"]
-#             return orphadisease
-#
-# print(getDiseaseNameFromORPHAID("ORPHA:243"))
 
 
-###Creationindex
-es = Elasticsearch()
+
 INDEX_NAME = "orphadata"
 
 if (es.indices.exists(INDEX_NAME)):
@@ -66,25 +32,33 @@ res=es.indices.create(index=INDEX_NAME,body=request_body)
 print("creatingResponse : '%s'"%(res))
 count = 1
 start = time.time()
-for elt in mydb.view("clinicalsigns/GetDiseaseByClinicalSign") :
+disease = ""
+symptoms = []
+for elt in mydb.view("clinicalsigns/GetDiseaseClinicalSignsNoLang"):
     value = elt.value
-    disease=value["disease"]
-    orphaid = disease["OrphaNumber"]
-    orphadisease = disease["Name"]["text"]
+    currentDisease = value["disease"]["Name"]["text"]
+    currentSymptom = value["clinicalSign"]["Name"]["text"]
+    if(disease == currentDisease):
+        symptoms.append(currentSymptom)
+    elif(disease == ""):
+        disease = currentDisease
+        symptoms.append(currentSymptom)
+    else :
 
-    doc = {
-        'ORPHAid' : str(orphaid),
-        'diseases' : orphadisease,
-    }
-    print('oprha id :')
-    print(str(orphaid))
-    print("disease :")
-    print(orphadisease)
-    res = es.index(index=INDEX_NAME,doc_type='orpha',id=count,body=doc)
-    count+=1
-    print("fillingResponse: '%s'" % (res))
-
+        doc = {
+                'ORPHAdisease' : disease,
+                'ORPHAsymtpoms' : symptoms,
+        }
+        print("diseas :")
+        print(disease)
+        print("symptom :")
+        print(symptoms)
+        res = es.index(index=INDEX_NAME,doc_type='orpha',id=count,body=doc)
+        count+=1
+        print("fillingResponse: '%s'" % (res))
+        disease = currentDisease
+        symptoms[:] = []
+        symptoms.append(currentSymptom)
 stop = time.time()
 print(stop-start)
-#2316.770339012146s
-#38min
+#129.59s
