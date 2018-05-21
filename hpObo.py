@@ -5,9 +5,8 @@ import os.path
 
 
 
-
 my_path = os.path.abspath(os.getcwd())
-path = my_path + '\sources\hp.obo'
+path = my_path + '/sources/hp.obo'
 graph = obonet.read_obo(path)
 
 
@@ -22,6 +21,8 @@ id = [id_ for id_ in graph.nodes(data=True)] #liste qui contient les id
 t=[] #on initialise
 l=[]
 l2=[]
+all = []
+parsedXref=[]
 for i in range(len(id)): #on pourrait etre plus opti mais jy arrive pas
     t.append(id[i][0])# on recupere les id dans t
 for elt in t: #on parcourt la liste des id
@@ -36,15 +37,19 @@ for elt in t: #on parcourt la liste des id
             parsedSyn.append(syn.split("\"")[1])
         l2.append([parsedXref, [name[elt]] + parsedSyn])
         l.append([elt, [name[elt]] + parsedSyn])
+        all.append([elt,[name[elt]] + parsedSyn,parsedXref])
     else :
-        l2.append([parsedXref, name[elt]])
-        l.append([elt, name[elt]])
+        l2.append([parsedXref, [name[elt]]])
+        l.append([elt, [name[elt]]])
+        all.append([elt,[name[elt]],parsedXref])
+
 
 class hpOboClass :
 
-    def __init__(self,ID = l, xref = l2):
+    def __init__(self,ID = l, xref = l2,idxrefsyn = all):
         self.ID = ID
         self.xref = xref
+        self.idxrefsyn = all
 
     def getIDFromSymptom(self,symptom) :
         listHP = []
@@ -68,7 +73,8 @@ class hpOboClass :
         return listUMLS
 
 #Exemple :
-# test = hpOboClass()
+test = hpOboClass()
+# print(test.idxrefsyn)
 # test.getIDFromSymptom("Malformation of the mandible")
-# test.getIDFromSymptom("cancer")
+# print(test.getIDFromSymptom("cancer"))
 # print(test.getUMLSFromSymptom("cancer"))
