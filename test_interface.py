@@ -1,8 +1,14 @@
-import tkinter as tk
+from PIL import ImageTk,Image
+try:
+    # for Python2
+    import Tkinter as tk  ## notice capitalized T in Tkinter 
+except ImportError:
+    # for Python3
+    import tkinter as tk   ## notice lowercase 't' in tkinter here
 
-class PageSearch(tk.Frame):
+class PageSearch(tk.Canvas):
     def __init__(self, *args, **kwargs):
-        tk.Frame.__init__(self, *args, **kwargs)
+        tk.Canvas.__init__(self, *args, **kwargs)
     def show(self):
         self.lift()
 
@@ -12,23 +18,24 @@ class PageResults(PageSearch):
        label = tk.Label(self, text="This is results page")
        label.pack(side="top", fill="both", expand=True)
 
-class MainView(tk.Frame):
+class MainView(tk.Canvas):
     def __init__(self, *args, **kwargs):
-        tk.Frame.__init__(self, *args, **kwargs)
+        tk.Canvas.__init__(self, *args, **kwargs)
         ps = PageSearch(self)
         pr = PageResults(self)
 
 
 
-        container = tk.Frame(self)
-        container.pack(side="top", fill="both", expand=True)
-
-        #BackGround    
-        background_image=tk.PhotoImage("pictures\\rouge.png")
-        background_label = tk.Label(container, image=background_image)
-        background_label.place(x=0, y=0, relwidth=1, relheight=1)
-        background_label.image = background_image
+        #container = tk.Frame(self)
         
+        #BackGround    
+
+        container = tk.Canvas(self, width = 200, height = 200, bg = "blue")
+        container.pack(expand ="yes", fill ="both")
+
+        image = ImageTk.PhotoImage(file = "pictures/rouge.png")
+        container.create_image(100,100, image = image, anchor = "nw")
+
         #Titre
         title = tk.Label(container, text="Medical data aggregation system", font=("Arial", 25))
 
@@ -56,11 +63,10 @@ class MainView(tk.Frame):
         quit_button.place(in_=container,x=500, y=350, width=70, height=30)
 
         title.pack()
-        ps.show()
+        
 
 if __name__ == "__main__":
     root = tk.Tk() 
-
     main = MainView(root)
     main.pack(side="top", fill="both", expand=True)
     root.title("Medical data aggregation system")
