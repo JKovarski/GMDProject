@@ -4,12 +4,6 @@ def rech():
 	#Mettre ici l'ensemble des actions à effectuer lors de la recherche
 	print("OK");
 
-def add(nb):
-	nb += 1
-	"var_saisie"+str(nb) = StringVar()
-	"symptom"+str(nb) =Entry(fenetre, textvariable="var_saisie"+str(nb), width=30)	
-	"symptom"+str(nb).pack();
-	print("symptom"+str(nb))
 
 #Création fenêtre 
 fenetre = Tk()
@@ -29,13 +23,17 @@ ligne_saisie = Entry(fenetre, textvariable=var_saisie, width=30)
 bouton_recherche = Button(fenetre, text="Rechercher", command=rech)
 
 #Bouton pour ajouter symptome
-bouton_ajout = Button(fenetre, text="Add symptom", command=add(nb_symptoms))
+bouton_ajout = Button(fenetre, text="Add symptom")
 #bouton quitter
 bouton_quitter =Button(fenetre, text="Quitter", command=fenetre.quit)
 
-
+background_image=PhotoImage("pictures\\rouge.png")
+background_label = Label(fenetre, image=background_image)
+background_label.place(x=0, y=0, relwidth=1, relheight=1)
+background_label.image = background_image
 
 #Affichage des éléments 
+background_label.pack()
 titre_label.pack()
 ligne_saisie.pack()
 bouton_recherche.pack()
