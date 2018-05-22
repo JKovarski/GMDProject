@@ -7,8 +7,6 @@ except ImportError:
 	import tkinter as tk   ## notice lowercase 't' in tkinter here
 
 
-sympt_list ={}
-
 class MainView(tk.Tk):
 	def __init__(self, *args, **kwargs):
 
@@ -20,7 +18,7 @@ class MainView(tk.Tk):
 		container.grid_rowconfigure(0, weight=1)
 		container.grid_columnconfigure(0,weight=1)
 
-		
+
 		#Chargement des pages
 		self.frames = { }
 		for F in (StartPage , PageResults):
@@ -32,7 +30,7 @@ class MainView(tk.Tk):
 
 	
 	def show_frame(self, cont):
-
+		
 		frame = self.frames[cont]
 		frame.tkraise()
 
@@ -52,16 +50,12 @@ class StartPage(tk.Frame):
 		#Zone de saisie
 		symptoms = tk.StringVar()
 		line = tk.Entry(self, textvariable=symptoms, width=50)
-		
-		#global sympt_list     # Needed to modify global copy of globvar
-		#sympt_list = symptoms
-	
-		controller.val = "test"
+
 		#Bouton de recherche
 		search_button = tk.Button(self, text="Search", 
 			command=lambda: controller.show_frame(PageResults))
 		
-		
+		i = 0
 		#Bouton quitter
 		quit_button = tk.Button(self, text="Quit", command=quit)
 		
@@ -74,27 +68,34 @@ class StartPage(tk.Frame):
 		search_button.place(in_=self, x=470, y=200, width=70, height=30)
 		quit_button.place(in_=self,x=500, y=350, width=70, height=30)
 		title.pack()
-
+	
+	def maj():
+		i = 1
 
 class PageResults(tk.Frame):
-	def __init__(self, parent, controller):
+	def __init__(self, parent, controller, StartPage=None):
+		self.StartPage = StartPage
 		tk.Frame.__init__(self, parent)
-		print(controller.val)
 		#Titre
 		title = tk.Label(self, text="Results", font=("Arial", 22))
 
 		#Bouton retour
 		return_button = tk.Button(self, text="Return", 
-			command=lambda: controller.show_frame(StartPage))
+			command=lambda: controller.show_frame(self.StartPage))
 
 		#Bouton quitter
 		quit_button = tk.Button(self, text="Quit", command=quit)
 
 		#Placement des elements
-		return_button.place(in_=self, x=30, y=350, width=70, height=30)
+		#return_button.place(in_=self, x=30, y=350, width=70, height=30)
 		quit_button.place(in_=self,x=500, y=350, width=70, height=30)
 		title.pack()
 
+		if self.StartPage is not None:
+			self.StartPage.maj()
+			print(self.StartPage.i)
+		else :
+			print("Tadaronnne")
 	   
 		
 app = MainView()
