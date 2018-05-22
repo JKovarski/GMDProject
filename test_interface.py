@@ -1,74 +1,103 @@
 from PIL import ImageTk,Image
 try:
-    # for Python2
-    import Tkinter as tk  ## notice capitalized T in Tkinter 
+	# for Python2
+	import Tkinter as tk  ## notice capitalized T in Tkinter 
 except ImportError:
-    # for Python3
-    import tkinter as tk   ## notice lowercase 't' in tkinter here
-
-class PageSearch(tk.Canvas):
-    def __init__(self, *args, **kwargs):
-        tk.Canvas.__init__(self, *args, **kwargs)
-    def show(self):
-        self.lift()
-
-class PageResults(PageSearch):
-   def __init__(self, *args, **kwargs):
-       PageSearch.__init__(self, *args, **kwargs)
-       label = tk.Label(self, text="This is results page")
-       label.pack(side="top", fill="both", expand=True)
-
-class MainView(tk.Canvas):
-    def __init__(self, *args, **kwargs):
-        tk.Canvas.__init__(self, *args, **kwargs)
-        ps = PageSearch(self)
-        pr = PageResults(self)
+	# for Python3
+	import tkinter as tk   ## notice lowercase 't' in tkinter here
 
 
+sympt_list ={}
 
-        #container = tk.Frame(self)
-        
-        #BackGround    
+class MainView(tk.Tk):
+	def __init__(self, *args, **kwargs):
 
-        container = tk.Canvas(self, width = 200, height = 200, bg = "blue")
-        container.pack(expand ="yes", fill ="both")
+		tk.Tk.__init__(self, *args, **kwargs)
+		container = tk.Frame(self)
+		
+		container.pack(expand ="yes", fill ="both")
 
-        image = ImageTk.PhotoImage(file = "pictures/rouge.png")
-        container.create_image(100,100, image = image, anchor = "nw")
+		container.grid_rowconfigure(0, weight=1)
+		container.grid_columnconfigure(0,weight=1)
 
-        #Titre
-        title = tk.Label(container, text="Medical data aggregation system", font=("Arial", 25))
+		
+		#Chargement des pages
+		self.frames = { }
+		for F in (StartPage , PageResults):
+			frame = F(container, self)
+			self.frames[F] = frame
+			frame.grid(row=0, column=0, sticky="nsew")
+		
+		self.show_frame(StartPage)
 
-        #Consignes
-        order = tk.Label(container, text="What are your symptoms?", font=("Arial", 12))
-        order2 = tk.Label(container, text="For many symptoms, separate them with \";\"", font=("Arial", 12))
-        
-        #Zone de saisie
-        symptoms = tk.StringVar()
-        line = tk.Entry(container, textvariable=symptoms, width=50)
+	
+	def show_frame(self, cont):
 
-        #Bouton de recherche
-        search_button = tk.Button(container, text="Search")
-        
-        #Bouton quitter
-        quit_button = tk.Button(container, text="Quit", command=quit)
-        
+		frame = self.frames[cont]
+		frame.tkraise()
 
 
-        #Placement des composants
-        order.place(in_=container, x=150, y=150, width=300, height=30)
-        line.place(in_=container, x=150, y=200, width=300, height=30)
-        order2.place(in_=container, x=150, y=250,width=300, height=30)
-        search_button.place(in_=container, x=470, y=200, width=70, height=30)
-        quit_button.place(in_=container,x=500, y=350, width=70, height=30)
 
-        title.pack()
-        
+class StartPage(tk.Frame):
+	def __init__(self, parent, controller):
+		tk.Frame.__init__(self, parent)
 
-if __name__ == "__main__":
-    root = tk.Tk() 
-    main = MainView(root)
-    main.pack(side="top", fill="both", expand=True)
-    root.title("Medical data aggregation system")
-    root.wm_geometry("600x400")
-    root.mainloop()
+		#Titre
+		title = tk.Label(self, text="Medical data aggregation system", font=("Arial", 22))
+
+		#Consignes
+		order = tk.Label(self, text="What are your symptoms?", font=("Arial", 12))
+		order2 = tk.Label(self, text="For many symptoms, separate them with \";\"", font=("Arial", 12))
+		
+		#Zone de saisie
+		symptoms = tk.StringVar()
+		line = tk.Entry(self, textvariable=symptoms, width=50)
+		
+		#global sympt_list     # Needed to modify global copy of globvar
+		#sympt_list = symptoms
+	
+		controller.val = "test"
+		#Bouton de recherche
+		search_button = tk.Button(self, text="Search", 
+			command=lambda: controller.show_frame(PageResults))
+		
+		
+		#Bouton quitter
+		quit_button = tk.Button(self, text="Quit", command=quit)
+		
+
+
+		#Placement des composants
+		order.place(in_=self, x=150, y=150, width=300, height=30)
+		line.place(in_=self, x=150, y=200, width=300, height=30)
+		order2.place(in_=self, x=100, y=250,width=400, height=30)
+		search_button.place(in_=self, x=470, y=200, width=70, height=30)
+		quit_button.place(in_=self,x=500, y=350, width=70, height=30)
+		title.pack()
+
+
+class PageResults(tk.Frame):
+	def __init__(self, parent, controller):
+		tk.Frame.__init__(self, parent)
+		print(controller.val)
+		#Titre
+		title = tk.Label(self, text="Results", font=("Arial", 22))
+
+		#Bouton retour
+		return_button = tk.Button(self, text="Return", 
+			command=lambda: controller.show_frame(StartPage))
+
+		#Bouton quitter
+		quit_button = tk.Button(self, text="Quit", command=quit)
+
+		#Placement des elements
+		return_button.place(in_=self, x=30, y=350, width=70, height=30)
+		quit_button.place(in_=self,x=500, y=350, width=70, height=30)
+		title.pack()
+
+	   
+		
+app = MainView()
+app.title("Medical data aggregation system")
+app.wm_geometry("600x400")
+app.mainloop()
