@@ -5,7 +5,7 @@ try:
 except ImportError:
     # for Python3
     import tkinter as tk   ## notice lowercase 't' in tkinter here
-
+import hpObo as hpo
 
 class MainView(tk.Tk):
     def __init__(self, *args, **kwargs):
@@ -70,16 +70,26 @@ class StartPage(tk.Frame):
         title.pack()
     
     def Search(self, symptoms):
+        listeHP = []
+        listeUMLS = []
+
+        h = hpo.hpOboClass()
         
         liste = symptoms.split(";")
-
         for s in liste:
-            print(s)
-            #Effectuer les actions de recherche ici
+            #Envoie des symptomes à HPO :
+            listeHP.append(h.getIDFromSymptom(s))
+            listeUMLS.append(h.getUMLSFromSymptom(s))
 
         test = tk.Label(self, text=liste[0], font=("Arial", 15))
         test.place(in_=self, x=100, y=380,width=400, height=30)
         
+
+        for i in listeUMLS:
+            print(i)
+
+
+
 app = MainView()
 app.title("Medical data aggregation system")
 app.wm_geometry("600x500")
