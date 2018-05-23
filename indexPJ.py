@@ -1,10 +1,12 @@
 from hpAnno import *
 from hpObo import *
+from elasticsearch import Elasticsearch
+
 import time
 #DONT FORGET TO SETUP OMIMINDEX
 hpOboClass = hpOboClass()
 hpAnnoClass = hpAnnoClass()
-omimClass = omimClass()
+#omimClass = omimClass()
 
 es = Elasticsearch()
 
