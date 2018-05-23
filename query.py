@@ -1,11 +1,13 @@
 
 from elasticsearch import Elasticsearch
 import couchdb
+import pymysql
 
 SERVER = 'http://couchdb.telecomnancy.univ-lorraine.fr'
 DB_NAME = 'orphadatabase'
 couchserver = couchdb.Server(SERVER)
 mydb = couchserver[DB_NAME]
+es = Elasticsearch()
 
 import pymysql.cursors as pc
 
@@ -25,7 +27,7 @@ def side_effect(side_effects):
         liste = []
         for side in side_effects :
             medicaments=[]
-            sql ="SELECT stitch_compound_id1 FROM `meddra_all_se` as "+side+" WHERE side_effect_name LIKE "+'"%'+side+'%"'+" GROUP BY stitch_compound_id1"
+            sql ="SELECT stitch_compound_id1 FROM `meddra_all_se` WHERE side_effect_name LIKE "+'"%'+side+'%"'+" GROUP BY stitch_compound_id1"
             cursor.execute(sql)
             for row in cursor:
                 cid1 = row["stitch_compound_id1"]

@@ -21,7 +21,8 @@ print("creating '%s' index..." % (INDEX_NAME))
 res = es.indices.create(index = INDEX_NAME, body = request_body)
 print(" response: '%s'" % (res))
 
-tree = ET.parse("drugbank.xml")
+tree = ET.parse("sources/drugbank.xml")
+print('ok')
 root = tree.getroot()
 a=1
 for child in root.findall('drug'):
