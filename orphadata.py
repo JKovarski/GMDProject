@@ -33,21 +33,21 @@ print("creatingResponse : '%s'"%(res))
 count = 1
 start = time.time()
 disease = ""
-symptoms = []
+symptoms = ""
 for elt in mydb.view("clinicalsigns/GetDiseaseClinicalSignsNoLang"):
     value = elt.value
     currentDisease = value["disease"]["Name"]["text"]
     currentSymptom = value["clinicalSign"]["Name"]["text"]
     if(disease == currentDisease):
-        symptoms.append(currentSymptom)
+        symptoms+=" "+currentSymptom
     elif(disease == ""):
         disease = currentDisease
-        symptoms.append(currentSymptom)
+        symptoms+=" "+currentSymptom
     else :
 
         doc = {
                 'ORPHAdisease' : disease,
-                'ORPHAsymtpoms' : symptoms,
+                'ORPHAsymtpoms' : symptoms
         }
         print("diseas :")
         print(disease)
@@ -57,8 +57,8 @@ for elt in mydb.view("clinicalsigns/GetDiseaseClinicalSignsNoLang"):
         count+=1
         print("fillingResponse: '%s'" % (res))
         disease = currentDisease
-        symptoms[:] = []
-        symptoms.append(currentSymptom)
+        symptoms = ""
+        symptoms+=" "+currentSymptom
 stop = time.time()
 print(stop-start)
 #129.59s

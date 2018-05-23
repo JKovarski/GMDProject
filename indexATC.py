@@ -20,7 +20,7 @@ print("creating '%s' index..." % (INDEX_NAME))
 res = es.indices.create(index = INDEX_NAME, body = request_body)
 print(" response: '%s'" % (res))
 
-with open('atc.txt') as f:
+with open('sources/atc.txt') as f:
     count=1
     for line in f:
         a,b=line.split(' ',1)
@@ -35,7 +35,7 @@ with open('atc.txt') as f:
         count+=1
         print(" response: '%s'" % (res))
 
-with open('stitch.tsv') as f:
+with open('sources/stitch.tsv') as f:
     for line in f:
         a,b,c,d=line.split(' ',3)
         res= es.search(index=INDEX_NAME,body={"query":{'match':{'ATC':d}}})

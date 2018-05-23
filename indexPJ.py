@@ -1,10 +1,10 @@
 from hpAnno import *
 from hpObo import *
 import time
+from elasticsearch import Elasticsearch
 #DONT FORGET TO SETUP OMIMINDEX
 hpOboClass = hpOboClass()
 hpAnnoClass = hpAnnoClass()
-omimClass = omimClass()
 
 es = Elasticsearch()
 
@@ -35,18 +35,9 @@ for elt in hpOboClass.idxrefsyn :
         'CUI' : elt[2],
         'OMIMid' : OMIM,
         'ORPHAid' : ORPHA,
-        'OMIMDiseases' : '0',
+
     }
-    print('hpID :')
-    print(elt[0])
-    print('symptoms :')
-    print(elt[1])
-    print('CUI :')
-    print(elt[2])
-    print('OMIM :')
-    print(OMIM)
-    print('ORPHA :')
-    print(ORPHA)
+
     res = es.index(index=INDEX_NAME,doc_type='hp',id=count,body=doc)
     count+=1
     print("fillingResponse: '%s'" % (res))
