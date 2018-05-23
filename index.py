@@ -1,4 +1,4 @@
-import xml.etree.ElementTree as ET
+from lxml import etree
 
 from elasticsearch import Elasticsearch
 
@@ -21,16 +21,19 @@ print("creating '%s' index..." % (INDEX_NAME))
 res = es.indices.create(index = INDEX_NAME, body = request_body)
 print(" response: '%s'" % (res))
 
-tree = ET.parse("sources/drugbank.xml")
-print('ok')
+
+tree = etree.parse("sources/drugbank.xml")
 root = tree.getroot()
 a=1
 for child in root.findall('drug'):
-    doc = {
-    'toxicity': str(child.find('toxicity').text) ,
-    'care' : str(child.find('indication').text),
-    'name' : str(child.find('name').text)
-    }
-    res = es.index(index=INDEX_NAME,doc_type='medicament',id=a,body=doc)
-    a=a+1
-    print(" response: '%s'" % (res))
+    # doc = {
+    # 'toxicity': str(child.find('toxicity').text) ,
+    # 'care' : str(child.find('indication').text),
+    # 'name' : str(child.find('name').text)
+    # }
+    # res = es.index(index=INDEX_NAME,doc_type='medicament',id=a,body=doc)
+    # a=a+1
+    print("toxicity : '%s'" %(str(child.find('toxicity').text)))
+    print("care : '%s'" %(str(child.find('indication').text)))
+    print("name : '%s'" %(str(child.find('name').text)))
+    #print("response: '%s'" % (res))
