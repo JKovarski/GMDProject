@@ -70,23 +70,26 @@ class StartPage(tk.Frame):
         title.pack()
     
     def Search(self, symptoms):
-        listeHP = []
-        listeUMLS = []
-
-        h = hpo.hpOboClass()
         
-        liste = symptoms.split(";")
-        for s in liste:
-            #Envoie des symptomes à HPO :
-            listeHP.append(h.getIDFromSymptom(s))
-            listeUMLS.append(h.getUMLSFromSymptom(s))
+        if(symptoms != ""):
 
-        test = tk.Label(self, text=liste[0], font=("Arial", 15))
-        test.place(in_=self, x=100, y=380,width=400, height=30)
-        
+            listeHP = []
+            listeUMLS = []
 
-        for i in listeUMLS:
-            print(i)
+            h = hpo.hpOboClass()
+            
+            liste = symptoms.split(";")
+            for s in liste:
+                #Envoie des symptomes à HPO :
+                listeHP.append(h.getIDFromSymptom(s))
+                listeUMLS.append(h.getUMLSFromSymptom(s))
+
+            test = tk.Label(self, text=liste[0], font=("Arial", 15))
+            test.place(in_=self, x=100, y=380,width=400, height=30)
+            
+
+            for i in listeUMLS:
+                print(i)
 
 
 
