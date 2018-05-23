@@ -2,3 +2,8 @@
 \.idea/
 
 sources/hp_annotations\.sqlite
+sources/br08303.keg
+sources/chemical.sources.v5.0.tsv
+sources/drugbank.xml
+sources/omim.txt
+sources/omim_onto.csv
